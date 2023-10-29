@@ -10,6 +10,7 @@ import {
     Card,
     Carousel,
     Collapse,
+    Tooltip,
 } from "@material-tailwind/react";
 
 export {
@@ -22,4 +23,5 @@ export {
     Card,
     Carousel,
     Collapse,
+    Tooltip,
 };
