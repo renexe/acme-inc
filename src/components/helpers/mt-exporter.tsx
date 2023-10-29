@@ -8,6 +8,7 @@ import {
     Button,
     IconButton,
     Card,
+    Carousel
 } from "@material-tailwind/react";
 
 export {
@@ -18,4 +19,5 @@ export {
     Button,
     IconButton,
     Card,
+    Carousel
 };
