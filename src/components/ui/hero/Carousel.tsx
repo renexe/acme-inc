@@ -6,15 +6,15 @@ import Image from "next/image";
 
 const Carousel = () => {
   return (
-    <CarouselMT className="rounded-xl" autoplay loop>
+    <CarouselMT className="absolute -top-16 left-0" autoplay loop >
       {carouselItems.map((item, index) => (
-        <div className="relative w-full h-[500px]">
+        <div className="relative w-full h-[calc(100vh)] md:h-full">
           <Image
             src={item.src}
             alt={item.alt}
             key={index}
+            fill
             objectFit="cover"
-            layout="fill"
           />
         </div>
       ))}
