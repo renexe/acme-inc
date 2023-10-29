@@ -5,7 +5,7 @@ import { Button } from "@/components/helpers/mt-exporter";
 const CallToActionButton = () => {
   function handleClick() {
     window.scrollTo({
-      top: window.innerHeight - 60,
+      top: window.innerHeight,
       behavior: 'smooth'
     })
   }
