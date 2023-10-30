@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/helpers/mt-exporter";
 import { FaArrowUpAZ, FaArrowDownAZ, FaArrowUp19, FaArrowDown19, FaHeart } from "react-icons/fa6";
 
-const FILTERS = [
+export const FILTERS = [
   {
     name: "Nome ASC",
     icon: <FaArrowUpAZ />
