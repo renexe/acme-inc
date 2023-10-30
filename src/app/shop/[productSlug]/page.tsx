@@ -30,7 +30,7 @@ export default function Page({ params }: { params: { productSlug: string } }) {
   }, []);
 
   return (
-    <main className="flex items-start justify-between overflow-hidden pt-12">
+    <main className="flex flex-col md:flex-row items-start md:justify-between md:overflow-hidden md:pt-12">
 
       <div className="w-full h-full flex justify-center items-center">
         <div className="w-[500px] h-[500px] relative">
@@ -45,8 +45,8 @@ export default function Page({ params }: { params: { productSlug: string } }) {
         </div>
       </div>
 
-      <div className="w-full h-full flex justify-center items-center">
-        <div className="w-[500px] min-h-[500px] border-white border p-10 flex flex-col gap-6 relative">
+      <div className="w-full h-full flex justify-center items-center mt-6 md:mt-0">
+        <div className="w-full mx-4 md:mx-0 md:w-[500px] min-h-[500px] border-white border p-10 flex flex-col gap-6 relative">
           <FavoriteButton />
           <Typography color="white" className="text-2xl font-semibold">{product?.name}</Typography>
           <Typography color="white" className="text-sm">{product?.description}</Typography>
