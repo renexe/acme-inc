@@ -1,5 +1,6 @@
 import { VERBS, ADJECTIVES } from "@/mock/products-convention";
 import { IProduct } from "@/models/product";
+import { loremIpsum } from "react-lorem-ipsum";
 
 /**
  * Generates an array of unique products with random names, prices, images, and descriptions.
@@ -13,17 +14,24 @@ export async function generateProductsDb(): Promise<any> {
 
   for (let i = 0; i < VERBS.length; i++) {
     const productName = `${randomVerbs[i]} ${randomAdjectives[i]}`;
-    const description = randomDescription();
-
+    const description = loremIpsum({
+      p: 1,
+      avgWordsPerSentence: Math.floor(Math.random() * (6 - 3 + 1) + 3),
+      avgSentencesPerParagraph: Math.floor(Math.random() * (10 - 5 + 1) + 5),
+    }).join().slice(0, 500);
+    
     const nameLength = productName.length;
     const descriptionLength = description.length;
 
-    const value =
-      ((10 + nameLength) * ((500 - descriptionLength) / 4));
+    const value = (10 + nameLength) * ((500 - descriptionLength) / 4);
 
     const product = {
       name: productName,
-      slug: productName.toLowerCase().replace(/ /g, "-"),
+      slug: productName
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[^\w\s]/gi, "")
+        .replace(/ /g, "-"),
       price: value,
       image: `https://picsum.photos/id/${i}/500/500`,
       description: description,
@@ -35,14 +43,4 @@ export async function generateProductsDb(): Promise<any> {
   }
 
   return products;
-}
-
-/**
- * Generates a random string of characters to be used as a product description.
- * @returns {string} The generated description.
- */
-function randomDescription(): string {
-  return Array.from({ length: Math.floor(Math.random() * 481) + 20 }, () =>
-    String.fromCharCode(Math.floor(Math.random() * 26) + 97)
-  ).join("");
 }
