@@ -28,7 +28,7 @@ const ProductCard = ({ product, loading }: ProductCardProps) => {
             />
             <div className="absolute z-20 bottom-0 w-full h-1/3 p-4 bg-black/50 backdrop-blur-sm">
               <h3 className="text-xl font-bold text-white">{name}</h3>
-              <p className="text-lg font-bold text-white">R$ {price.toFixed(2)}</p>
+              <p className="text-lg font-bold text-white">R$ {price.toFixed(2).replace('.', ',')}</p>
             </div>
           </Link></>
       )
