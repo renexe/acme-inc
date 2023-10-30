@@ -33,12 +33,13 @@ export type E_FILTERS = typeof FILTERS[number];
 
 export interface FilterBarProps {
   filterCallback: (filter: E_FILTERS) => void;
+  searchCallback: (input: string) => void;
 }
 
 const FilterBar = (
   props: FilterBarProps
 ) => {
-  const {filterCallback} = props;
+  const { filterCallback, searchCallback } = props;
 
   const [currentFilter, setCurrentFilter] = useState<E_FILTERS>(FILTERS[0]);
 
@@ -81,7 +82,7 @@ const FilterBar = (
       </Menu>
 
       <div className="flex justify-center w-2/4">
-        <Input crossOrigin label="Buscar" color="white" />
+        <Input crossOrigin label="Buscar" color="white" onChange={(e) => searchCallback(e.target.value)} />
       </div>
 
       <Button

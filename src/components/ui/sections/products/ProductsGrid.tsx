@@ -9,6 +9,7 @@ import { sortProducts } from "@/utils/sort";
 
 const ProductsGrid = () => {
   const [products, setProducts] = useState<IProduct[] | []>([]);
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[] | []>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,15 +39,31 @@ const ProductsGrid = () => {
     }
   }
 
+  const searchProducts = (input: string) => {
+    if (input === "") {
+      setFilteredProducts([]);
+      return;
+    }
+    const filteredProducts = products.filter((product: IProduct) => product.name.toLowerCase().includes(input.toLowerCase()));
+    setFilteredProducts(filteredProducts);
+  }
+
   return (
     <>
 
-      <FilterBar filterCallback={filterProducts} />
+      <FilterBar filterCallback={filterProducts} searchCallback={searchProducts} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center gap-10 w-full">
-        {products?.map((product: IProduct, index: number) => (
-          <ProductCard product={product} loading={loading} key={index} />
-        ))}
+        {filteredProducts.length > 0 ?
+          filteredProducts?.map((product: IProduct, index: number) => (
+            <ProductCard product={product} loading={loading} key={index} />
+          ))
+          :
+          products?.map((product: IProduct, index: number) => (
+            <ProductCard product={product} loading={loading} key={index} />
+          )
+          )}
+
       </div>
     </>
   )
