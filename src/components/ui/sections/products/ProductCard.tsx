@@ -9,7 +9,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, loading }: ProductCardProps) => {
-  const { name, slug, description, price, image } = product;
+  const { name, slug, price, image } = product;
   
   return (
     <div className="w-full flex flex-col items-center justify-center relative min-h-[400px] overflow-hidden">
