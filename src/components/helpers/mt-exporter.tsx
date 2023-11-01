@@ -18,7 +18,8 @@ import {
   MenuList,
   MenuItem,
   Drawer,
-  Badge
+  Badge,
+  Alert
 } from "@material-tailwind/react";
 
 export {
@@ -39,5 +40,6 @@ export {
   MenuList,
   MenuItem,
   Drawer,
-  Badge
+  Badge,
+  Alert
 };

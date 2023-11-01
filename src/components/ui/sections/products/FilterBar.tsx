@@ -9,6 +9,8 @@ import {
 } from "@/components/helpers/mt-exporter";
 import { Button } from "@/components/helpers/mt-exporter";
 import { FaArrowUpAZ, FaArrowDownAZ, FaArrowUp19, FaArrowDown19, FaHeart } from "react-icons/fa6";
+import { getLoggedInUser } from "@/utils/user";
+import { IProduct } from "@/models/product";
 
 export const FILTERS = [
   {
@@ -34,15 +36,17 @@ export type E_FILTERS = typeof FILTERS[number];
 export interface FilterBarProps {
   filterCallback: (filter: E_FILTERS) => void;
   searchCallback: (input: string) => void;
+  filterFavoritesCallback: (action: "add" | "remove") => void;
 }
 
 const FilterBar = (
   props: FilterBarProps
 ) => {
-  const { filterCallback, searchCallback } = props;
+  const { filterCallback, searchCallback, filterFavoritesCallback } = props;
 
   const [currentFilter, setCurrentFilter] = useState<E_FILTERS>(FILTERS[0]);
   const [searchInputValue, setSearchInputValue] = useState<string>('');
+  const [isFavoriteFiltering, setIsFavoriteFiltering] = useState<boolean>(false);
 
 
   const handleFilter = (filter: E_FILTERS) => {
@@ -55,6 +59,11 @@ const FilterBar = (
   const handleSearchInput = (input: string) => {
     setSearchInputValue(input);
     searchCallback(input);
+  }
+
+  const handleFavoriteButton = () => {
+    setIsFavoriteFiltering(!isFavoriteFiltering);
+    filterFavoritesCallback(isFavoriteFiltering ? "remove" : "add");
   }
 
   return (
@@ -95,9 +104,10 @@ const FilterBar = (
 
       <Button
         variant="outlined"
-        color="white"
+        color={isFavoriteFiltering ? "indigo" : "white"}
         className="flex items-center justify-center gap-2 w-40 h-10"
         size="sm"
+        onClick={handleFavoriteButton}
       >
         <FaHeart className="" /> Favoritos
       </Button>

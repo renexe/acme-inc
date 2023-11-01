@@ -6,6 +6,7 @@ import { generateProductsDb } from "@/utils/generate-product-db";
 import ProductCard from "./ProductCard";
 import FilterBar, { E_FILTERS, FILTERS } from "./FilterBar";
 import { sortProducts } from "@/utils/sort";
+import { getLoggedInUser } from "@/utils/user";
 
 const ProductsGrid = () => {
   const [products, setProducts] = useState<IProduct[] | []>([]);
@@ -39,6 +40,27 @@ const ProductsGrid = () => {
     }
   }
 
+  const filterFavorites = (action: "add" | "remove") => {
+    if (action === "remove") {
+      removeFilterFavorites();
+      return;
+    }
+    
+    const user = getLoggedInUser();
+    if (!user) return;
+
+    const favorites = user.favorites as IProduct[];
+    setProducts(favorites);
+  }
+
+  const removeFilterFavorites = () => {
+    const storedProducts = localStorage.getItem("products");
+    if (storedProducts) {
+      const parsedProducts = JSON.parse(storedProducts);
+      setProducts(sortProducts(parsedProducts, FILTERS[0]));
+    }
+  }
+
   const searchProducts = (input: string) => {
     if (input === "") {
       setFilteredProducts([]);
@@ -51,7 +73,7 @@ const ProductsGrid = () => {
   return (
     <>
 
-      <FilterBar filterCallback={filterProducts} searchCallback={searchProducts} />
+      <FilterBar filterCallback={filterProducts} searchCallback={searchProducts} filterFavoritesCallback={filterFavorites} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center gap-10 w-full">
         {filteredProducts.length > 0 ?
