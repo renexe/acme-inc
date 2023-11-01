@@ -11,6 +11,7 @@ import {
 import CartButton from "./CartButton";
 import CartDrawer from "./CartDrawer";
 import { getCart } from "@/utils/cart";
+import SignInButton from "./SignInButton";
 
 const StickyNavbar = () => {
   const [openNav, setOpenNav] = useState(false);
@@ -61,19 +62,7 @@ const StickyNavbar = () => {
 
     </ul>
   );
-
-  const LoginButton = () => {
-    return (
-      <Button
-        variant="outlined"
-        size="sm"
-        color="white"
-      >
-        <span>Login</span>
-      </Button>
-    );
-  }
-
+  
   return (
     <>
       <Navbar className={`bg-black/50 border-black/70 sticky top-0 z-50 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4`}>
@@ -92,7 +81,7 @@ const StickyNavbar = () => {
             <CartButton handleOpenDrawer={handleOpenDrawer} itemsOnCart={cartLenght} />
 
             <div className="flex items-center gap-x-1">
-              <LoginButton />
+              <SignInButton />
             </div>
 
             <IconButton
