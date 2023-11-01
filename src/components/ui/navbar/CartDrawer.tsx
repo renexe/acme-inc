@@ -4,7 +4,8 @@ import {
   Typography,
   IconButton,
   Drawer,
-  Tooltip
+  Tooltip,
+  Button
 } from "@/components/helpers/mt-exporter";
 import { FaTrashCan, FaX } from "react-icons/fa6";
 import { IProduct } from "@/models/product";
@@ -24,7 +25,7 @@ const CartDrawer = (props: CartDrawerProps) => {
   useEffect(() => {
     setProducts(getCart());
     setTotal(totalCart());
-  }, [localStorage.getItem("cart")]);
+  }, [localStorage?.getItem("cart")]);
 
   const handleRemove = (index: number) => {
     removeFromCart(index);
@@ -73,6 +74,9 @@ const CartDrawer = (props: CartDrawerProps) => {
                 <Typography color="gray">
                   {total}
                 </Typography>
+              </div>
+              <div className="flex items-center justify-between mt-6 border-b border-gray-200">
+                <Button variant="filled" className="w-full">CONCLUIR A COMPRA</Button>
               </div>
             </>
           ) : (

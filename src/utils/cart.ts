@@ -4,7 +4,7 @@ const DISCOUNT = 0.15;
 
 export function getCart() {
   let cart: IProduct[] = [];
-  if (localStorage && localStorage.getItem("cart")) {
+  if (localStorage?.getItem("cart")) {
     cart = JSON.parse(localStorage.getItem("cart")!);
   }
   return cart;
