@@ -67,8 +67,6 @@ const SignInButton = () => {
                 <Typography variant="small" className="mt-4 flex justify-center">
                   Já possui uma conta?
                   <Typography
-                    as="a"
-                    href="#signup"
                     variant="small"
                     color="blue-gray"
                     className="ml-1 font-bold"
@@ -93,8 +91,6 @@ const SignInButton = () => {
                 <Typography variant="small" className="mt-4 flex justify-center">
                   Não possui uma conta?
                   <Typography
-                    as="a"
-                    href="#signup"
                     variant="small"
                     color="blue-gray"
                     className="ml-1 font-bold"
