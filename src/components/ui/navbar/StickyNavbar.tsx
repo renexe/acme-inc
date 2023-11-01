@@ -6,11 +6,28 @@ import {
   Typography,
   Button,
   IconButton,
-  Collapse
+  Collapse,
 } from "@/components/helpers/mt-exporter";
+import CartButton from "./CartButton";
+import CartDrawer from "./CartDrawer";
+import { getCart } from "@/utils/cart";
 
 const StickyNavbar = () => {
   const [openNav, setOpenNav] = useState(false);
+  const [openCartDrawer, setOpenCartDrawer] = useState<boolean>(false);
+
+  const [ cartLenght, setCartLenght ] = useState<number>(0);
+
+  //TODO: Fix this function, the cart lenght is not updating when add to cart
+  useEffect(() => {
+    if(localStorage){
+      setCartLenght(getCart().length);
+    }
+  }, [getCart().length]);
+
+  const handleOpenDrawer = () => {
+    setOpenCartDrawer(!openCartDrawer);
+  }
 
   useEffect(() => {
     window.addEventListener(
@@ -58,63 +75,72 @@ const StickyNavbar = () => {
   }
 
   return (
-    <Navbar className={`bg-black/50 border-black/70 sticky top-0 z-50 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4`}>
-      <div className="flex items-center justify-between text-white">
-        <Typography
-          as="a"
-          href="/"
-          className="mr-4 cursor-pointer py-1.5 font-semibold text-xl tracking-tight leading-tight"
-        >
-          Acme.Inc
-        </Typography>
-        <div className="flex items-center gap-4">
-          <div className="mr-4 hidden md:block">{navList}</div>
-          <div className="flex items-center gap-x-1">
-            <LoginButton />
-          </div>
-          <IconButton
-            variant="text"
-            className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent md:hidden"
-            ripple={false}
-            onClick={() => setOpenNav(!openNav)}
+    <>
+      <Navbar className={`bg-black/50 border-black/70 sticky top-0 z-50 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4`}>
+        <div className="flex items-center justify-between text-white">
+          <Typography
+            as="a"
+            href="/"
+            className="mr-4 cursor-pointer py-1.5 font-semibold text-xl tracking-tight leading-tight"
           >
-            {openNav ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                className="h-6 w-6"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
-          </IconButton>
+            Acme.Inc
+          </Typography>
+          <div className="flex items-center gap-4">
+
+            <div className="mr-4 hidden md:block">{navList}</div>
+
+            <CartButton handleOpenDrawer={handleOpenDrawer} itemsOnCart={cartLenght} />
+
+            <div className="flex items-center gap-x-1">
+              <LoginButton />
+            </div>
+
+            <IconButton
+              variant="text"
+              className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent md:hidden"
+              ripple={false}
+              onClick={() => setOpenNav(!openNav)}
+            >
+              {openNav ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  className="h-6 w-6"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
+            </IconButton>
+          </div>
         </div>
-      </div>
-      <Collapse open={openNav}>
-        {navList}
-      </Collapse>
-    </Navbar>
+        <Collapse open={openNav}>
+          {navList}
+        </Collapse>
+      </Navbar>
+
+      <CartDrawer handleOpenDrawer={handleOpenDrawer} openDrawer={openCartDrawer} />
+    </>
   );
 }
 

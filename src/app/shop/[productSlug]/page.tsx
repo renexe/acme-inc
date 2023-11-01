@@ -6,6 +6,7 @@ import { IProduct } from "@/models/product";
 import { Typography, Button } from "@/components/helpers/mt-exporter";
 import { FaCartShopping } from "react-icons/fa6";
 import FavoriteButton from "@/components/ui/sections/products/FavoriteButton";
+import { addToCart } from "@/utils/cart";
 
 export default function Page({ params }: { params: { productSlug: string } }) {
   const slug = params.productSlug;
@@ -77,6 +78,7 @@ export default function Page({ params }: { params: { productSlug: string } }) {
             color="white"
             className="flex items-center justify-center gap-2 w-full"
             size="md"
+            onClick={() => addToCart(product as IProduct)}
           >
             <FaCartShopping /> Adicionar ao Carrinho
           </Button>
