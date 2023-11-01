@@ -42,11 +42,19 @@ const FilterBar = (
   const { filterCallback, searchCallback } = props;
 
   const [currentFilter, setCurrentFilter] = useState<E_FILTERS>(FILTERS[0]);
+  const [searchInputValue, setSearchInputValue] = useState<string>('');
 
 
   const handleFilter = (filter: E_FILTERS) => {
     setCurrentFilter(filter);
     filterCallback(filter);
+    searchCallback('');
+    setSearchInputValue('');
+  }
+  
+  const handleSearchInput = (input: string) => {
+    setSearchInputValue(input);
+    searchCallback(input);
   }
 
   return (
@@ -82,7 +90,7 @@ const FilterBar = (
       </Menu>
 
       <div className="flex justify-center w-2/4">
-        <Input crossOrigin label="Buscar" color="white" onChange={(e) => searchCallback(e.target.value)} />
+        <Input crossOrigin label="Buscar" color="white" value={searchInputValue} onChange={(e) => handleSearchInput(e.target.value)} />
       </div>
 
       <Button
