@@ -36,7 +36,7 @@ const CartDrawer = (props: CartDrawerProps) => {
     const cart = getCart() || [];
     setProducts(cart);
     setTotal(totalCart());
-  });
+  }, [openDrawer]);
 
   const handleRemove = (index: number) => {
     const cart = getCart() || [];

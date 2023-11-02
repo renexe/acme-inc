@@ -4,13 +4,11 @@ import { useEffect, useState } from "react";
 import {
   Navbar,
   Typography,
-  Button,
   IconButton,
   Collapse,
 } from "@/components/helpers/mt-exporter";
 import CartButton from "./CartButton";
 import CartDrawer from "./CartDrawer";
-import { getCart } from "@/utils/cart";
 import SignInButton from "./SignInButton";
 
 const StickyNavbar = () => {
