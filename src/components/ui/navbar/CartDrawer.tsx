@@ -21,16 +21,18 @@ const CartDrawer = (props: CartDrawerProps) => {
   const { openDrawer, handleOpenDrawer } = props;
   const [products, setProducts] = useState<IProduct[] | []>([]);
   const [total, setTotal] = useState<string>('');
-
+  
   useEffect(() => {
-    setProducts(getCart());
+    const cart = getCart() || [];
+    setProducts(cart);
     setTotal(totalCart());
-  }, [localStorage?.getItem("cart")]);
-
+  });
+  
   const handleRemove = (index: number) => {
+    const cart = getCart() || [];
     removeFromCart(index);
     setTotal(totalCart());
-    setProducts(getCart());
+    setProducts(cart);
   }
 
   return (
@@ -48,7 +50,7 @@ const CartDrawer = (props: CartDrawerProps) => {
           {products.length > 0 ? (
             <>
               {products?.map((product: IProduct, index: number) => (
-                <div className="flex items-center justify-between py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between py-4 border-b border-gray-200" key={index}>
                   <div className="flex items-center gap-4">
                     <img src={product.image} alt={product.name} className="w-16 h-16 object-cover" />
                     <div className="flex flex-col w-full">

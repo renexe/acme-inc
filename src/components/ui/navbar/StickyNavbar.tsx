@@ -17,15 +17,6 @@ const StickyNavbar = () => {
   const [openNav, setOpenNav] = useState(false);
   const [openCartDrawer, setOpenCartDrawer] = useState<boolean>(false);
 
-  const [ cartLenght, setCartLenght ] = useState<number>(0);
-
-  //TODO: Fix this function, the cart lenght is not updating when add to cart
-  useEffect(() => {
-    if(localStorage){
-      setCartLenght(getCart().length);
-    }
-  }, [getCart().length]);
-
   const handleOpenDrawer = () => {
     setOpenCartDrawer(!openCartDrawer);
   }
@@ -62,7 +53,7 @@ const StickyNavbar = () => {
 
     </ul>
   );
-  
+
   return (
     <>
       <Navbar className={`bg-black/50 border-black/70 sticky top-0 z-50 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4`}>
@@ -78,7 +69,7 @@ const StickyNavbar = () => {
 
             <div className="mr-4 hidden md:block">{navList}</div>
 
-            <CartButton handleOpenDrawer={handleOpenDrawer} itemsOnCart={cartLenght} />
+            <CartButton handleOpenDrawer={handleOpenDrawer} />
 
             <div className="flex items-center gap-x-1">
               <SignInButton />

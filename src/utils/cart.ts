@@ -3,6 +3,8 @@ import { IProduct } from "@/models/product";
 const DISCOUNT = 0.15;
 
 export function getCart() {
+  if (typeof window === 'undefined') return;
+
   let cart: IProduct[] = [];
   if (localStorage?.getItem("cart")) {
     cart = JSON.parse(localStorage.getItem("cart")!);

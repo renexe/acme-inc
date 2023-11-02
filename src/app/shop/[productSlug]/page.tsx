@@ -7,7 +7,6 @@ import { Typography, Button } from "@/components/helpers/mt-exporter";
 import { FaCartShopping } from "react-icons/fa6";
 import FavoriteButton from "@/components/ui/sections/products/FavoriteButton";
 import { addToCart } from "@/utils/cart";
-import { isFavoriteProduct } from "@/utils/user";
 
 export default function Page({ params }: { params: { productSlug: string } }) {
   const slug = params.productSlug;
@@ -30,6 +29,14 @@ export default function Page({ params }: { params: { productSlug: string } }) {
       }
     }
   }, []);
+
+  const handleAddToCart = (product: IProduct) => {
+    addToCart(product);
+    const cartButtom = document.getElementById('cart-button');
+    if(cartButtom){
+      cartButtom.click();
+    }
+  }
 
   return (
     <main className="flex flex-col md:flex-row items-start md:justify-between md:overflow-hidden md:pt-12">
@@ -81,7 +88,7 @@ export default function Page({ params }: { params: { productSlug: string } }) {
             color="white"
             className="flex items-center justify-center gap-2 w-full"
             size="md"
-            onClick={() => addToCart(product as IProduct)}
+            onClick={() => handleAddToCart(product as IProduct)}
           >
             <FaCartShopping /> Adicionar ao Carrinho
           </Button>
