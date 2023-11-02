@@ -67,7 +67,7 @@ const FilterBar = (
   }
 
   return (
-    <div className="w-full flex items-center h-10 justify-between">
+    <div className="w-full flex flex-col gap-4 md:gap-0 md:flex-row md:items-center md:h-10 md:justify-between">
       <Menu
         animate={{
           mount: { y: 0 },
@@ -78,7 +78,7 @@ const FilterBar = (
           <Button
             variant="outlined"
             color="white"
-            className="flex items-center justify-center gap-2 w-40 h-10"
+            className="flex items-center justify-center gap-2 md:w-40 h-10 w-full"
             size="sm"
           >
             {currentFilter.icon} {currentFilter.name}
@@ -98,14 +98,14 @@ const FilterBar = (
         </MenuList>
       </Menu>
 
-      <div className="flex justify-center w-2/4">
+      <div className="flex justify-center w-full md:w-2/4">
         <Input crossOrigin label="Buscar" color="white" value={searchInputValue} onChange={(e) => handleSearchInput(e.target.value)} />
       </div>
 
       <Button
         variant="outlined"
         color={isFavoriteFiltering ? "indigo" : "white"}
-        className="flex items-center justify-center gap-2 w-40 h-10"
+        className="flex items-center justify-center gap-2 w-full md:w-40 h-10"
         size="sm"
         onClick={handleFavoriteButton}
       >
