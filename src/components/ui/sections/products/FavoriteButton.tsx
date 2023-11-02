@@ -21,9 +21,10 @@ const FavoriteButton = (
   const handleFavoriteButton = () => {
     if (!isLogged) {
       setShowAlert(true);
+      setIsFavorite(false);
       return;
     }
-    if(isFavorite){
+    if (isFavorite) {
       removeFavoriteProduct(product);
     } else {
       saveFavoriteProduct(product);
@@ -32,13 +33,19 @@ const FavoriteButton = (
   }
 
   useEffect(() => {
-    if(isFavoriteProduct(product)){
-      setIsFavorite(true);
-    }
-    if(isLoggedIn()){
+    const loggedUser = isLoggedIn();
+    if (!loggedUser) {
+      setIsLogged(false);
+      setIsFavorite(false);
+    } else {
       setIsLogged(true);
+      if (isFavoriteProduct(product)) {
+        setIsFavorite(true);
+      } else {
+        setIsFavorite(false);
+      }	
     }
-  }, []);
+  });
 
   return (
     <>
