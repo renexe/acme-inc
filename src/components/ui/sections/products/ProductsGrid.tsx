@@ -2,12 +2,8 @@
 
 import { useEffect, useState, useContext } from "react";
 import { IProduct } from "@/models/product";
-import { generateProductsDb } from "@/utils/generate-product-db";
 import ProductCard from "./ProductCard";
-import FilterBar, { E_FILTERS, FILTERS } from "./FilterBar";
-import { sortProducts } from "@/utils/sort";
-import { getLoggedInUser } from "@/utils/user";
-import { UserContext } from "@/providers/UserContext";
+import FilterBar from "./FilterBar";
 import { ProductsContext } from "@/providers/ProductsContext";
 
 const ProductsGrid = () => {

@@ -43,7 +43,11 @@ const FilterBar = () => {
   const [searchInputValue, setSearchInputValue] = useState<string>('');
 
   const handleFavoriteButton = () => {
-    // filterFavoritesCallback();
+    if (filteredBy === "favorites") {
+      handleFilterProducts('name-asc');
+      return;
+    }
+    handleFilterProducts('favorites');
   }
 
   const handleSearchInput = (value: string) => {
@@ -98,7 +102,7 @@ const FilterBar = () => {
 
       <Button
         variant="outlined"
-        color={false ? "indigo" : "white"}
+        color={filteredBy === "favorites" ? "indigo" : "white"}
         className="flex items-center justify-center gap-2 w-full md:w-40 h-10"
         size="sm"
         onClick={handleFavoriteButton}

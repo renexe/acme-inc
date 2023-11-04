@@ -1,9 +1,10 @@
 'use client';
 import { IProduct } from '@/models/product';
 import { generateProductsDb } from '@/utils/generate-product-db';
-import { createContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { UserContext } from './UserContext';
 
-export type FilterType = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
+export type FilterType = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc' | 'favorites';
 
 export interface ProductsContextProps {
   allProducts: IProduct[] | [];
@@ -28,6 +29,8 @@ const INITIAL_STATE: ProductsContextProps = {
 export const ProductsContext = createContext<ProductsContextProps>(INITIAL_STATE);
 
 export function ProductsContextProvider({ children }: ProductsContextProviderProps) {
+  const { loggedUser } = useContext(UserContext);
+
   const [allProducts, setAllProducts] = useState<IProduct[] | []>(INITIAL_STATE.allProducts);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[] | []>(INITIAL_STATE.filteredProducts);
   const [filteredBy, setFilteredBy] = useState<FilterType>(INITIAL_STATE.filteredBy);
@@ -43,7 +46,7 @@ export function ProductsContextProvider({ children }: ProductsContextProviderPro
     }
     generateProducts();
   }, []);
-  
+
   const generateProducts = async () => {
     const generatedProducts = await generateProductsDb();
     localStorage.setItem("products", JSON.stringify(generatedProducts));
@@ -58,7 +61,7 @@ export function ProductsContextProvider({ children }: ProductsContextProviderPro
       case 'name-asc':
         sortedProducts = allProducts.sort((a, b) => a.name.localeCompare(b.name));
         break;
-        case 'name-desc':
+      case 'name-desc':
         sortedProducts = allProducts.sort((a, b) => b.name.localeCompare(a.name));
         break;
       case 'price-asc':
@@ -66,6 +69,13 @@ export function ProductsContextProvider({ children }: ProductsContextProviderPro
         break;
       case 'price-desc':
         sortedProducts = allProducts.sort((a, b) => b.price - a.price);
+        break;
+      case 'favorites':
+        if (!loggedUser) {
+          break;
+        }
+        const userFavorites = loggedUser.favorites;
+        sortedProducts = allProducts.filter((product: IProduct) => userFavorites.includes(product.slug as string));
         break;
       default:
         sortedProducts = allProducts;
