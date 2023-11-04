@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { CartContextProvider } from '@/providers/CartContext';
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from "@/components/helpers/mt-exporter";
 import Navbar from "@/components/ui/navbar/StickyNavbar";
@@ -58,15 +59,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  
+
   return (
     <ThemeProvider value={theme}>
-      <html lang="en">
-        <body className={`${inter.className} overflow-x-hidden`}>
-          <Navbar />
-          {children}
-        </body>
-      </html>
+      <CartContextProvider>
+        <html lang="en">
+          <body className={`${inter.className} overflow-x-hidden`}>
+            <Navbar />
+            {children}
+          </body>
+        </html>
+      </CartContextProvider>
     </ThemeProvider>
   )
 }

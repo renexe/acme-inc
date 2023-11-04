@@ -1,23 +1,20 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Badge } from "@/components/helpers/mt-exporter";
-import { getCart } from "@/utils/cart";
 import { FaCartShopping } from "react-icons/fa6";
+import { CartContext } from "@/providers/CartContext";
 
 export interface CartButtonProps {
   handleOpenDrawer: () => void;
 }
 
 const CartButton = (props: CartButtonProps) => {
-  const { handleOpenDrawer } = props;
+  const { cart, handleDrawerState } = useContext(CartContext);
   const [cartLength, setCartLength] = useState<number>(0);
 
   useEffect(() => {
-    const cart = getCart() || [];
-    if (cart) {
-      setCartLength(cart.length);
-    }
-  });
+    setCartLength(cart.length);
+  },[cart]);
 
   return (
     <>
@@ -28,7 +25,7 @@ const CartButton = (props: CartButtonProps) => {
           color="white"
           className="h-8"
           size="sm"
-          onClick={handleOpenDrawer}
+          onClick={handleDrawerState}
         >
           <FaCartShopping className="scale-125" />
         </Button>

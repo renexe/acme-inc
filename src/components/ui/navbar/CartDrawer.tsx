@@ -13,36 +13,40 @@ import {
 } from "@/components/helpers/mt-exporter";
 import { FaTrashCan, FaX } from "react-icons/fa6";
 import { IProduct } from "@/models/product";
-import { getCart, priceWithDiscount, removeFromCart, totalCart } from "@/utils/cart";
-import { useEffect, useState } from "react";
+import { applyDiscount, priceWithDiscount } from "@/utils/cart";
+import { useContext, useEffect, useState } from "react";
 import { getLoggedInUser, isLoggedIn } from "@/utils/user";
 import { IUser } from "@/models/user";
 import { CardFooter } from "@material-tailwind/react";
+import { CartContext } from "@/providers/CartContext";
+import Image from "next/image";
 
-export interface CartDrawerProps {
-  handleOpenDrawer: () => void;
-  openDrawer: boolean;
-}
+const CartDrawer = () => {
+  const { cart, emptyCart, drawerState, handleDrawerState, removeFromCart } = useContext(CartContext);
 
-const CartDrawer = (props: CartDrawerProps) => {
-  const { openDrawer, handleOpenDrawer } = props;
-  const [products, setProducts] = useState<IProduct[] | []>([]);
   const [total, setTotal] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [showCheckout, setShowCheckout] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>();
 
   useEffect(() => {
-    const cart = getCart() || [];
-    setProducts(cart);
-    setTotal(totalCart());
-  }, [openDrawer]);
+    calcTotal();
+  }, [cart]);
 
-  const handleRemove = (index: number) => {
-    const cart = getCart() || [];
-    removeFromCart(index);
-    setTotal(totalCart());
-    setProducts(cart);
+  const calcTotal = () => {
+    let storedTotal: string | number = cart.reduce((acc: number, product: IProduct) => {
+      return acc + applyDiscount(product.price);
+    }, 0);
+
+    storedTotal = storedTotal.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+    setTotal(storedTotal);
+  }
+
+  const handleRemove = (product: IProduct) => {
+    removeFromCart(product);
   }
 
   const checkout = () => {
@@ -53,18 +57,19 @@ const CartDrawer = (props: CartDrawerProps) => {
     const loggedUser = getLoggedInUser();
     setUser(loggedUser as IUser);
     setShowCheckout(true);
-    handleOpenDrawer();
+    handleDrawerState();
   }
 
   const handleCheckoutDialog = () => {
     setShowCheckout(!showCheckout);
+    emptyCart();
   }
 
   const showJson = () => {
     const cartData = {
       user: user,
       discount: '15%',
-      products: products.map((product: IProduct) => ({ name: product.name, price: priceWithDiscount(product.price) })),
+      products: cart.map((product: IProduct) => ({ name: product.name, price: priceWithDiscount(product.price) })),
       total: total
     }
     alert(JSON.stringify(cartData));
@@ -72,23 +77,29 @@ const CartDrawer = (props: CartDrawerProps) => {
 
   return (
     <>
-      <Drawer open={openDrawer} onClose={handleOpenDrawer} placement="right">
+      <Drawer open={drawerState} onClose={handleDrawerState} placement="right">
         <div className="p-4 w-full h-full">
           <div className="mb-6 flex items-center justify-between">
             <Typography variant="h5" color="blue-gray">
               Carrinho
             </Typography>
-            <IconButton variant="text" color="blue-gray" onClick={handleOpenDrawer}>
+            <IconButton variant="text" color="blue-gray" onClick={handleDrawerState}>
               <FaX />
             </IconButton>
           </div>
           <div className="flex flex-col bg-white">
-            {products.length > 0 ? (
+            {cart.length > 0 ? (
               <>
-                {products?.map((product: IProduct, index: number) => (
-                  <div className="flex items-center justify-between py-4 border-b border-gray-200" key={index}>
-                    <div className="flex items-center gap-4">
-                      <img src={product.image} alt={product.name} className="w-16 h-16 object-cover" />
+                {cart?.map((product: IProduct, index: number) => (
+                  <div className="py-4 border-b border-gray-200" key={index}>
+                    <div className="flex items-center gap-4 justify-between">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={64}
+                        height={64}
+                        objectFit="cover"
+                      />
                       <div className="flex flex-col w-full">
                         <Typography variant="h6" color="gray">
                           {product.name}
@@ -98,7 +109,7 @@ const CartDrawer = (props: CartDrawerProps) => {
                         </Typography>
                       </div>
                       <Tooltip content="Remover" placement="top" className="z-[9999]">
-                        <IconButton variant="text" color="blue-gray" className="group" onClick={() => handleRemove(index)}>
+                        <IconButton variant="text" color="blue-gray" className="group" onClick={() => handleRemove(product)}>
                           <FaTrashCan className="group-hover:text-red-500" />
                         </IconButton>
                       </Tooltip>
@@ -147,13 +158,13 @@ const CartDrawer = (props: CartDrawerProps) => {
               <Typography variant="h5" color="blue-gray">
                 Dados pessoais:
               </Typography>
-              <Typography variant="h6" color="blue-gray">
+              <Typography variant="paragraph" color="blue-gray">
                 {user?.name}
               </Typography>
-              <Typography variant="h6" color="blue-gray">
+              <Typography variant="paragraph" color="blue-gray">
                 {user?.phone}
               </Typography>
-              <Typography variant="h6" color="blue-gray">
+              <Typography variant="paragraph" color="blue-gray">
                 {user?.email}
               </Typography>
             </div>
@@ -161,7 +172,7 @@ const CartDrawer = (props: CartDrawerProps) => {
               <Typography variant="h5" color="blue-gray">
                 Produtos:
               </Typography>
-              {products?.map((product: IProduct, index: number) => (
+              {cart?.map((product: IProduct, index: number) => (
                 <div key={index} className="flex justify-between">
                   <Typography variant="h6" color="gray">
                     {product.name}
@@ -171,7 +182,7 @@ const CartDrawer = (props: CartDrawerProps) => {
                   </Typography>
                 </div>
               ))}
-              <div className="flex justify-between">
+              <div className="flex justify-between mt-4">
                 <Typography variant="h5" color="black">
                   Total
                 </Typography>

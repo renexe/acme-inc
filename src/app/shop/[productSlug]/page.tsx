@@ -1,18 +1,21 @@
 'use client'
-import { useEffect, useState } from "react";
-import { notFound } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { IProduct } from "@/models/product";
 import { Typography, Button } from "@/components/helpers/mt-exporter";
 import { FaCartShopping } from "react-icons/fa6";
 import FavoriteButton from "@/components/ui/sections/products/FavoriteButton";
-import { addToCart } from "@/utils/cart";
+import { CartContext } from "@/providers/CartContext";
+import AddToCartButton from "@/components/ui/buttons/AddToCartButton";
 
 export default function Page({ params }: { params: { productSlug: string } }) {
   const slug = params.productSlug;
+  const { addToCart } = useContext(CartContext);
   const [product, setProduct] = useState<IProduct | undefined>();
   const [totalPrice, setTotalPrice] = useState<string>('00,00');
   const [discount, setDiscount] = useState<string>('00,00');
+  const isProductInCart = false;
 
   useEffect(() => {
     const storedProducts = localStorage.getItem("products");
@@ -32,10 +35,6 @@ export default function Page({ params }: { params: { productSlug: string } }) {
 
   const handleAddToCart = (product: IProduct) => {
     addToCart(product);
-    const cartButtom = document.getElementById('cart-button');
-    if(cartButtom){
-      cartButtom.click();
-    }
   }
 
   return (
@@ -83,15 +82,7 @@ export default function Page({ params }: { params: { productSlug: string } }) {
             <Typography color="white" className="text-xl font-semibold">R$ {totalPrice}</Typography>
           </div>
 
-          <Button
-            variant="outlined"
-            color="white"
-            className="flex items-center justify-center gap-2 w-full"
-            size="md"
-            onClick={() => handleAddToCart(product as IProduct)}
-          >
-            <FaCartShopping /> Adicionar ao Carrinho
-          </Button>
+          <AddToCartButton product={product} />
         </div>
       </div>
 
