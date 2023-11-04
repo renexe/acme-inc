@@ -1,12 +1,14 @@
 'use client'
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Input } from "@/components/helpers/mt-exporter";
-import { saveUser } from "@/utils/user";
+
 import { IUser } from "@/models/user";
+import { UserContext } from "@/providers/UserContext";
 
 const SignUpForm = (props: {
   hideRegisterForm: () => void;
 }) => {
+  const { registerUser } = useContext(UserContext);
   const [errors, setErrors] = useState({
     name: false,
     phone: false,
@@ -33,7 +35,7 @@ const SignUpForm = (props: {
         email: data.email as string,
         password: data.password as string,
       }
-      saveUser(userData)
+      registerUser(userData)
       triggerRegisterSuccess();
     }
   };

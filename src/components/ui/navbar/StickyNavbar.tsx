@@ -9,7 +9,7 @@ import {
 } from "@/components/helpers/mt-exporter";
 import CartButton from "./CartButton";
 import CartDrawer from "./CartDrawer";
-import SignInButton from "./SignInButton";
+import SignInSignOutButton from "../buttons/SignInSignOutButton";
 
 const StickyNavbar = () => {
   const [openNav, setOpenNav] = useState(false);
@@ -70,7 +70,7 @@ const StickyNavbar = () => {
             <CartButton handleOpenDrawer={handleOpenDrawer} />
 
             <div className="flex items-center gap-x-1">
-              <SignInButton />
+              <SignInSignOutButton />
             </div>
 
             <IconButton

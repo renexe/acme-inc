@@ -1,12 +1,13 @@
 'use client'
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Input, Typography } from "@/components/helpers/mt-exporter";
-import { login } from "@/utils/user";
+import { UserContext } from "@/providers/UserContext";
+import { AlertContext } from "@/providers/AlertContext";
 
-const SignInForm = (props: {
-  handleOpenDialog: () => void;
-}) => {
-  const { handleOpenDialog } = props;
+const SignInForm = () => {
+  const { registerAlert } = useContext(AlertContext);
+  const { signIn, handleSignInDialogState } = useContext(UserContext);
+
   const [errors, setErrors] = useState({
     email: false,
     password: false,
@@ -28,8 +29,9 @@ const SignInForm = (props: {
         email: data.email as string,
         password: data.password as string,
       }
-      if (login(loginData.email, loginData.password)) {
-        triggerLoginSuccess();
+      if (signIn(loginData.email, loginData.password)) {
+        handleSignInDialogState();
+        registerAlert('Logado com sucesso', 'success');
       } else {
         setLoginResult('fail');
       }
@@ -44,9 +46,10 @@ const SignInForm = (props: {
       setCounter(count);
       if (count === 0) {
         clearInterval(intervalId);
-        handleOpenDialog();
+        handleSignInDialogState();
       }
     }, 1000);
+
   }
 
   const validate = (data: any) => {

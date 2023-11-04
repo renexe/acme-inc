@@ -68,7 +68,6 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       const parsedCart = JSON.parse(storedCart);
       setCart(parsedCart);
     }
-    console.log(cart);
   }, []);
 
   return (
