@@ -4,6 +4,10 @@ import { Inter } from 'next/font/google'
 import { ThemeProvider } from "@/components/helpers/mt-exporter";
 import Navbar from "@/components/ui/navbar/StickyNavbar";
 import './globals.css'
+import { UserContextProvider } from '@/providers/UserContext';
+import UserDialog from '@/components/ui/dialogs/UserDialog';
+import { AlertContextProvider } from '@/providers/AlertContext';
+import Alert from '@/components/ui/alert/Alert';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -62,14 +66,20 @@ export default function RootLayout({
 
   return (
     <ThemeProvider value={theme}>
-      <CartContextProvider>
-        <html lang="en">
-          <body className={`${inter.className} overflow-x-hidden`}>
-            <Navbar />
-            {children}
-          </body>
-        </html>
-      </CartContextProvider>
+      <AlertContextProvider>
+        <UserContextProvider>
+          <CartContextProvider>
+            <html lang="en">
+              <body className={`${inter.className} overflow-x-hidden`}>
+                <Navbar />
+                <Alert />
+                <UserDialog />
+                {children}
+              </body>
+            </html>
+          </CartContextProvider>
+        </UserContextProvider>
+      </AlertContextProvider>
     </ThemeProvider>
   )
 }
