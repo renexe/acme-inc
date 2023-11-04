@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
-import { CartContextProvider } from '@/providers/CartContext';
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from "@/components/helpers/mt-exporter";
+import { CartContextProvider } from '@/providers/CartContext';
+import { UserContextProvider } from '@/providers/UserContext';
+import { AlertContextProvider } from '@/providers/AlertContext';
+import { ProductsContextProvider } from '@/providers/ProductsContext';
 import Navbar from "@/components/ui/navbar/StickyNavbar";
 import './globals.css'
-import { UserContextProvider } from '@/providers/UserContext';
 import UserDialog from '@/components/ui/dialogs/UserDialog';
-import { AlertContextProvider } from '@/providers/AlertContext';
 import Alert from '@/components/ui/alert/Alert';
 
 const inter = Inter({ subsets: ['latin'] })
@@ -68,16 +69,18 @@ export default function RootLayout({
     <ThemeProvider value={theme}>
       <AlertContextProvider>
         <UserContextProvider>
-          <CartContextProvider>
-            <html lang="en">
-              <body className={`${inter.className} overflow-x-hidden`}>
-                <Navbar />
-                <Alert />
-                <UserDialog />
-                {children}
-              </body>
-            </html>
-          </CartContextProvider>
+          <ProductsContextProvider>
+            <CartContextProvider>
+              <html lang="en">
+                <body className={`${inter.className} overflow-x-hidden`}>
+                  <Navbar />
+                  <Alert />
+                  <UserDialog />
+                  {children}
+                </body>
+              </html>
+            </CartContextProvider>
+          </ProductsContextProvider>
         </UserContextProvider>
       </AlertContextProvider>
     </ThemeProvider>
