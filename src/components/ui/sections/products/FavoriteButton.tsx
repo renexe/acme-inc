@@ -2,7 +2,7 @@
 import { Tooltip } from "@/components/helpers/mt-exporter";
 import { IProduct } from "@/models/product";
 import { AlertContext } from "@/providers/AlertContext";
-import { isFavoriteProduct, isLoggedIn, removeFavoriteProduct, saveFavoriteProduct } from "@/utils/user";
+import { UserContext } from "@/providers/UserContext";
 import { useContext, useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa6";
 
@@ -14,41 +14,27 @@ const FavoriteButton = (
   props: FavoriteButtonProps
 ) => {
   const { registerAlert } = useContext(AlertContext);
+  const { loggedUser, addFavoriteProduct, removeFavoriteProduct } = useContext(UserContext);
 
   const { product } = props;
 
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [isLogged, setIsLogged] = useState<boolean>(false);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const isLoggedUserFavorite = loggedUser?.favorites?.find((favProduct) => favProduct === product.slug);
+  const [isFavorite, setIsFavorite] = useState<boolean>(isLoggedUserFavorite ? true : false);
 
   const handleFavoriteButton = () => {
-    if (!isLogged) {
+    if (!loggedUser) {
       registerAlert('Você precisa fazer login para favoritar um produto', 'error');
       setIsFavorite(false);
       return;
     }
     if (isFavorite) {
-      removeFavoriteProduct(product);
-    } else {
-      saveFavoriteProduct(product);
-    }
-    setIsFavorite(!isFavorite);
-  }
-
-  useEffect(() => {
-    const loggedUser = isLoggedIn();
-    if (!loggedUser) {
-      setIsLogged(false);
+      removeFavoriteProduct(product.slug as string);
       setIsFavorite(false);
     } else {
-      setIsLogged(true);
-      if (isFavoriteProduct(product)) {
-        setIsFavorite(true);
-      } else {
-        setIsFavorite(false);
-      }
+      addFavoriteProduct(product.slug as string);
+      setIsFavorite(true);
     }
-  });
+  }
 
   return (
     <Tooltip content={isFavorite ? "Remover dos favoritos" : "Add aos favoritos"} placement="left">
@@ -62,6 +48,3 @@ const FavoriteButton = (
 FavoriteButton.displayName = 'FavoriteButton';
 
 export default FavoriteButton;
-
-const arr = [1, 2, 3, 4]
-const max = Math.max.apply(null, arr);

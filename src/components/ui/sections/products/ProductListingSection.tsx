@@ -1,5 +1,4 @@
 
-import FilterBar from "./FilterBar";
 import ProductsGrid from "./ProductsGrid";
 
 const ProductListingSection = () => {

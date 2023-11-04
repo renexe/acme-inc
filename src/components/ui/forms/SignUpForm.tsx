@@ -34,6 +34,7 @@ const SignUpForm = (props: {
         phone: data.phone as string,
         email: data.email as string,
         password: data.password as string,
+        favorites: [],
       }
       registerUser(userData)
       triggerRegisterSuccess();

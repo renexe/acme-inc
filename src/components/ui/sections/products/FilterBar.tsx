@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Input,
   Menu,
@@ -9,61 +9,54 @@ import {
 } from "@/components/helpers/mt-exporter";
 import { Button } from "@/components/helpers/mt-exporter";
 import { FaArrowUpAZ, FaArrowDownAZ, FaArrowUp19, FaArrowDown19, FaHeart } from "react-icons/fa6";
-import { getLoggedInUser } from "@/utils/user";
-import { IProduct } from "@/models/product";
+import { FilterType, ProductsContext } from "@/providers/ProductsContext";
 
 export const FILTERS = [
   {
     name: "Nome ASC",
+    slug: "name-asc",
     icon: <FaArrowUpAZ />
   },
   {
-    name: "Nome DSC",
+    name: "Nome DESC",
+    slug: "name-desc",
     icon: <FaArrowDownAZ />
   },
   {
     name: "Preço ASC",
+    slug: "price-asc",
     icon: <FaArrowUp19 />
   },
   {
-    name: "Preço DSC",
+    name: "Preço DESC",
+    slug: "price-desc",
     icon: <FaArrowDown19 />
   },
 ]
 
 export type E_FILTERS = typeof FILTERS[number];
 
-export interface FilterBarProps {
-  filterCallback: (filter: E_FILTERS) => void;
-  searchCallback: (input: string) => void;
-  filterFavoritesCallback: (action: "add" | "remove") => void;
-}
+const FilterBar = () => {
 
-const FilterBar = (
-  props: FilterBarProps
-) => {
-  const { filterCallback, searchCallback, filterFavoritesCallback } = props;
+  const { filteredBy, handleFilterProducts, handleSearchProducts } = useContext(ProductsContext);
 
-  const [currentFilter, setCurrentFilter] = useState<E_FILTERS>(FILTERS[0]);
   const [searchInputValue, setSearchInputValue] = useState<string>('');
-  const [isFavoriteFiltering, setIsFavoriteFiltering] = useState<boolean>(false);
-
-
-  const handleFilter = (filter: E_FILTERS) => {
-    setCurrentFilter(filter);
-    filterCallback(filter);
-    searchCallback('');
-    setSearchInputValue('');
-  }
-  
-  const handleSearchInput = (input: string) => {
-    setSearchInputValue(input);
-    searchCallback(input);
-  }
 
   const handleFavoriteButton = () => {
-    setIsFavoriteFiltering(!isFavoriteFiltering);
-    filterFavoritesCallback(isFavoriteFiltering ? "remove" : "add");
+    // filterFavoritesCallback();
+  }
+
+  const handleSearchInput = (value: string) => {
+    setSearchInputValue(value);
+    handleSearchProducts(value);
+  }
+
+  const findCurrentFilter = () => {
+    const filter = FILTERS.find((filter: E_FILTERS) => filter.slug === filteredBy);
+    if (filter) {
+      return filter;
+    }
+    return FILTERS[0];
   }
 
   return (
@@ -81,7 +74,7 @@ const FilterBar = (
             className="flex items-center justify-center gap-2 md:w-40 h-10 w-full"
             size="sm"
           >
-            {currentFilter.icon} {currentFilter.name}
+            {findCurrentFilter().icon} {findCurrentFilter().name}
           </Button>
         </MenuHandler>
         <MenuList className="bg-black/50 backdrop-blur-md">
@@ -89,8 +82,9 @@ const FilterBar = (
             <MenuItem
               className="text-white flex gap-2"
               key={index}
-              onClick={() => handleFilter(filter)}
-              disabled={filter === currentFilter}
+              onClick={() => handleFilterProducts(filter.slug as FilterType)}
+              disabled={filter.slug === filteredBy}
+
             >
               {filter.icon} {filter.name}
             </MenuItem>
@@ -104,7 +98,7 @@ const FilterBar = (
 
       <Button
         variant="outlined"
-        color={isFavoriteFiltering ? "indigo" : "white"}
+        color={false ? "indigo" : "white"}
         className="flex items-center justify-center gap-2 w-full md:w-40 h-10"
         size="sm"
         onClick={handleFavoriteButton}
