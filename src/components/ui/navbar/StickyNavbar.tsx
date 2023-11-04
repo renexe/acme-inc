@@ -117,7 +117,7 @@ const StickyNavbar = () => {
         </Collapse>
       </Navbar>
 
-      <CartDrawer handleOpenDrawer={handleOpenDrawer} openDrawer={openCartDrawer} />
+      <CartDrawer />
     </>
   );
 }
