@@ -1,9 +1,12 @@
 <h1 align="center"> ACME Inc. </h1>
 
-[![Next.js 14](https://img.shields.io/badge/Next.js-14-blue)](https://nextjs.org/)
-[![React 18](https://img.shields.io/badge/React-18-blue)](https://reactjs.org/blog/2021/06/08/the-plan-for-react-18.html)
-[![TypeScript 5.0](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-4.html)
-[![Tailwind CSS 3.0](https://img.shields.io/badge/Tailwind%20CSS-3.0-blue)](https://tailwindcss.com/docs/just-in-time-mode)
+<siv align="center">
+  <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-FF9505" alt="Status do Projeto" />
+  <img src="https://img.shields.io/badge/Next.js-14-blue" alt="Next.js 14" />
+  <img src="https://img.shields.io/badge/React-18-blue" alt="React 18" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0-blue" alt="TypeScript 5.0" />
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-3.0-blue" alt="Tailwind CSS 3.0" />
+</siv>
 
 <p align="justify"> A Acme é uma empresa que atua vendendo produtos genéricos e preza bastante pela qualidade de suas soluções e por estar sempre um passo à frente do mercado em relação ao uso de tecnologia e design de suas aplicações.
 </p>
@@ -126,10 +129,22 @@ bun dev
 
 Abra [http://localhost:3000](http://localhost:3000) no navegador para ver o resultado.
 
+## Sobre o generateProducts
+
+<p align="justify">
+Sempre que uma página do site for aberta no navegador pela primeira vez, ou seja, com o localStorage limpo, o arquivo <code>generateProducts.ts</code> é executado.
+
+Ele gera um array de objetos com os dados dos produtos, e salva no localStorage.
+
+Uma vez criado, a lista de produtos gerados não vai ser alterada até que o localStorage seja limpo novamente.
+
+Veja como fazer isso logo abaixo.
+</p>
+
 ## Sobre o localStorage
 
 <p align="justify">
-Como foi um requisito do projeto, o localStorage é usado para armazenar os dados do usuário, dos produtos e do carrinho., implicando em algumas limitações de uso e acarretando a necessidade de limpar o localStorage para que o projeto volte ao seu estado inicial.
+Como foi um requisito do projeto, o localStorage é usado para armazenar e persistir dados de usuários, dos produtos e do carrinho.
 </p>
 
 #### Para limpar o localStorage faça o seguinte:
@@ -142,31 +157,14 @@ localStorage.clear();
 
 Então recarregue a página.
 
-<p align="justify">
-Para algumas ações, como o login, é necessário recarregar a página para que o localStorage seja atualizado já que não existe um meio de que o React "escute" alterações no storage em tempo real, ou como usar uma propriedade nativa que funcione para ações que acontecem no mesmo documento. 
-</p>
-
-Referências: [onStorage](https://developer.mozilla.org/pt-BR/docs/Web/API/Window/storage_event) e [storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event).
-
-#### Sobre o Next.js
-
-<p align="justify">
-O requisito de se utilizar o localStorage como recipiente de estados acarretou também no impedimento de explorar bastante os recursos de renderização em servidor que o Next oferece, já que o localStorage não é acessível no servidor.
-</p>
-
 ## Considerações finais
 
 <p align="justify">
-O projeto foi desenvolvido em 5 dias, e foi uma experiência muito enriquecedora e desafiadora, uma vez que esse nesse tempo havia a necessidade de planejar, esboçar um design, desenvolver e documentar.
+Desenvolver esse protótipo foi uma experiência enriquecedora, desde que
+o tempo não estava a meu favor. Mas em linha de gerais, fiquei satisfeito com o resultado, o design ficou bem próximo do que eu tinha em mente, e a experiência de usuário é boa.
 </p>
 <p align="justify">
-
-Sinto me tentado a melhorar utilizando de todo o potencial do Next.js, e também de outras ferramentas como o Redux, para melhor gerenciar os estados e poder dar total responsividade às ações do usuário. Bem como implementar testes automatizados e integração com um banco de dados.
-
-</p>
-<p align="justify">
-Provavelmente isso será feito após a conclusão do processo seletivo, e o projeto será atualizado.
-
+Sinto não ter podido implementar todas as funcionalidades que eu gostaria, mas acredito que o projeto atende aos requisitos propostos. Além do que sempre há espaço para melhorias, e pretendo continuar trabalhando nele.
 </p>
 
-     Obrigado por se interessar por esse projeto! ❤️
+     LimaStack 🚀
