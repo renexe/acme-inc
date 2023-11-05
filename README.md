@@ -1,12 +1,12 @@
 <h1 align="center"> ACME Inc. </h1>
 
-<siv align="center">
+<div align="center">
   <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-FF9505" alt="Status do Projeto" />
   <img src="https://img.shields.io/badge/Next.js-14-blue" alt="Next.js 14" />
   <img src="https://img.shields.io/badge/React-18-blue" alt="React 18" />
   <img src="https://img.shields.io/badge/TypeScript-5.0-blue" alt="TypeScript 5.0" />
   <img src="https://img.shields.io/badge/Tailwind%20CSS-3.0-blue" alt="Tailwind CSS 3.0" />
-</siv>
+</div>
 
 <p align="justify"> A Acme é uma empresa que atua vendendo produtos genéricos e preza bastante pela qualidade de suas soluções e por estar sempre um passo à frente do mercado em relação ao uso de tecnologia e design de suas aplicações.
 </p>
