@@ -3,19 +3,19 @@ import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { IProduct } from "@/models/product";
-import { Typography, Button } from "@/components/helpers/mt-exporter";
-import { FaCartShopping } from "react-icons/fa6";
-import FavoriteButton from "@/components/ui/sections/products/FavoriteButton";
-import { CartContext } from "@/providers/CartContext";
+import { Typography, Tooltip } from "@/components/helpers/mt-exporter";
+import { FaHeart } from "react-icons/fa6";
 import AddToCartButton from "@/components/ui/buttons/AddToCartButton";
+import { UserContext } from "@/providers/UserContext";
 
 export default function Page({ params }: { params: { productSlug: string } }) {
   const slug = params.productSlug;
-  const { addToCart } = useContext(CartContext);
+  const { favoriteProducts, handleFavoriteProduct } = useContext(UserContext);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
   const [product, setProduct] = useState<IProduct | undefined>();
   const [totalPrice, setTotalPrice] = useState<string>('00,00');
   const [discount, setDiscount] = useState<string>('00,00');
-  const isProductInCart = false;
 
   useEffect(() => {
     const storedProducts = localStorage.getItem("products");
@@ -33,8 +33,15 @@ export default function Page({ params }: { params: { productSlug: string } }) {
     }
   }, []);
 
-  const handleAddToCart = (product: IProduct) => {
-    addToCart(product);
+  useEffect(() => {
+    if (product) {
+      setIsFavorite(favoriteProducts.includes(product.slug as string));
+    }
+  }, [favoriteProducts, product]);
+
+  const handleFavoriteButton = () => {
+    setIsFavorite(!isFavorite);
+    handleFavoriteProduct(slug as string);
   }
 
   return (
@@ -56,7 +63,11 @@ export default function Page({ params }: { params: { productSlug: string } }) {
       <div className="w-full h-full flex justify-center items-center mt-6 md:mt-0">
         <div className="w-full mx-4 md:mx-0 md:w-[500px] min-h-[500px] border-white border p-10 flex flex-col gap-6 relative">
           {product && (
-            <FavoriteButton product={product} />
+            <Tooltip content={isFavorite ? "Remover dos favoritos" : "Add aos favoritos"} placement="left">
+              <button className="absolute top-0 right-0 z-20 p-4 group" onClick={handleFavoriteButton}>
+                <FaHeart className={`${isFavorite ? 'text-indigo-500' : 'text-white'} scale-125 group-hover:scale-150 transition`} />
+              </button>
+            </Tooltip>
           )}
           <Typography color="white" className="text-2xl font-semibold">{product?.name}</Typography>
           <Typography color="white" className="text-sm">{product?.description}</Typography>

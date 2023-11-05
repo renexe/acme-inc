@@ -29,11 +29,17 @@ const INITIAL_STATE: ProductsContextProps = {
 export const ProductsContext = createContext<ProductsContextProps>(INITIAL_STATE);
 
 export function ProductsContextProvider({ children }: ProductsContextProviderProps) {
-  const { loggedUser } = useContext(UserContext);
+  const { loggedUser, favoriteProducts, handleFavoriteProduct } = useContext(UserContext);
 
   const [allProducts, setAllProducts] = useState<IProduct[] | []>(INITIAL_STATE.allProducts);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[] | []>(INITIAL_STATE.filteredProducts);
   const [filteredBy, setFilteredBy] = useState<FilterType>(INITIAL_STATE.filteredBy);
+
+  useEffect(() => {
+    if(filteredBy === 'favorites') {
+      handleFilterProducts('favorites');
+    }
+  },[handleFavoriteProduct])
 
   useEffect(() => {
     const storedProducts = localStorage.getItem("products");
@@ -74,8 +80,7 @@ export function ProductsContextProvider({ children }: ProductsContextProviderPro
         if (!loggedUser) {
           break;
         }
-        const userFavorites = loggedUser.favorites;
-        sortedProducts = allProducts.filter((product: IProduct) => userFavorites.includes(product.slug as string));
+        sortedProducts = allProducts.filter((product: IProduct) => favoriteProducts.includes(product.slug as string));
         break;
       default:
         sortedProducts = allProducts;

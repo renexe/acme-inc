@@ -15,19 +15,20 @@ import { FaTrashCan, FaX } from "react-icons/fa6";
 import { IProduct } from "@/models/product";
 import { applyDiscount, priceWithDiscount } from "@/utils/cart";
 import { useContext, useEffect, useState } from "react";
-import { getLoggedInUser, isLoggedIn } from "@/utils/user";
-import { IUser } from "@/models/user";
 import { CardFooter } from "@material-tailwind/react";
 import { CartContext } from "@/providers/CartContext";
 import Image from "next/image";
+import { UserContext } from "@/providers/UserContext";
+import { AlertContext } from "@/providers/AlertContext";
 
 const CartDrawer = () => {
   const { cart, emptyCart, drawerState, handleDrawerState, removeFromCart } = useContext(CartContext);
+  const { loggedUser } = useContext(UserContext);
+  const { registerAlert } = useContext(AlertContext);
 
   const [total, setTotal] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [showCheckout, setShowCheckout] = useState<boolean>(false);
-  const [user, setUser] = useState<IUser>();
 
   useEffect(() => {
     calcTotal();
@@ -50,12 +51,13 @@ const CartDrawer = () => {
   }
 
   const checkout = () => {
-    if (!isLoggedIn()) {
-      setShowAlert(true);
+    if (!loggedUser) {
+      registerAlert(
+        'Faça login para concluir a compra',
+        'error'
+      );
       return;
     }
-    const loggedUser = getLoggedInUser();
-    setUser(loggedUser as IUser);
     setShowCheckout(true);
     handleDrawerState();
   }
@@ -67,7 +69,7 @@ const CartDrawer = () => {
 
   const showJson = () => {
     const cartData = {
-      user: user,
+      loggedUser: loggedUser,
       discount: '15%',
       products: cart.map((product: IProduct) => ({ name: product.name, price: priceWithDiscount(product.price) })),
       total: total
@@ -159,13 +161,13 @@ const CartDrawer = () => {
                 Dados pessoais:
               </Typography>
               <Typography variant="paragraph" color="blue-gray">
-                {user?.name}
+                {loggedUser?.name}
               </Typography>
               <Typography variant="paragraph" color="blue-gray">
-                {user?.phone}
+                {loggedUser?.phone}
               </Typography>
               <Typography variant="paragraph" color="blue-gray">
-                {user?.email}
+                {loggedUser?.email}
               </Typography>
             </div>
             <div className="w-full border border-black p-2">

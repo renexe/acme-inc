@@ -1,7 +1,6 @@
 'use client';
-import { IProduct } from '@/models/product';
 import { IUser } from '@/models/user';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export interface UserContextProps {
   registeredUsers: IUser[] | [];
@@ -11,8 +10,8 @@ export interface UserContextProps {
   loggedUser: IUser | null;
   signInDialogState: boolean;
   handleSignInDialogState: () => void;
-  addFavoriteProduct: (productSlug: string) => void;
-  removeFavoriteProduct: (productSlug: string) => void;
+  handleFavoriteProduct: (productSlug: string) => void;
+  favoriteProducts: string[];
 }
 
 interface UserContextProviderProps {
@@ -27,8 +26,8 @@ const INITIAL_STATE: UserContextProps = {
   loggedUser: null,
   signInDialogState: false,
   handleSignInDialogState: () => { },
-  addFavoriteProduct: () => { },
-  removeFavoriteProduct: () => { },
+  handleFavoriteProduct: () => { },
+  favoriteProducts: []
 }
 
 export const UserContext = createContext<UserContextProps>(INITIAL_STATE);
@@ -37,6 +36,19 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
   const [registeredUsers, setRegisteredUsers] = useState<IUser[] | []>(INITIAL_STATE.registeredUsers);
   const [loggedUser, setLoggedUser] = useState<IUser | null>(INITIAL_STATE.loggedUser);
   const [signInDialogState, setSignInDialogState] = useState<boolean>(INITIAL_STATE.signInDialogState);
+  const [favoriteProducts, setFavoriteProducts] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("registeredUsers")) {
+      setRegisteredUsers(JSON.parse(localStorage.getItem("registeredUsers")!));
+    }
+
+    if (localStorage.getItem("loggedUser")) {
+      const parsedUser = JSON.parse(localStorage.getItem("loggedUser")!) as IUser;
+      setLoggedUser(parsedUser);
+      setFavoriteProducts(parsedUser.favorites);
+    }
+  }, []);
 
   const handleRegisterUser = (user: IUser) => {
     let storedUser: IUser[] = [];
@@ -53,6 +65,7 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     if (user) {
       localStorage.setItem("loggedUser", JSON.stringify(user));
       setLoggedUser(user);
+      setFavoriteProducts(user.favorites);
       return true;
     }
     return false;
@@ -60,6 +73,7 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
 
   const handleSignOut = () => {
     setLoggedUser(null);
+    setFavoriteProducts([]);
     localStorage.removeItem("loggedUser");
   }
 
@@ -67,51 +81,29 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     setSignInDialogState((cur) => !cur);
   }
 
-  const addFavoriteProduct = (productSlug: string) => {
+  const handleFavoriteProduct = (productSlug: string) => {
     if (!loggedUser) return;
     const updatedUser = { ...loggedUser };
-    updatedUser.favorites.push(productSlug);
-    localStorage.setItem("loggedUser", JSON.stringify(updatedUser));
+    
+    if(loggedUser.favorites.find((fav) => fav === productSlug)) { // Means that the product is already a favorite
+      updatedUser.favorites = updatedUser.favorites.filter((fav) => fav !== productSlug);
+    } else {
+      updatedUser.favorites.push(productSlug);
+    }
+    setFavoriteProducts(updatedUser.favorites);
     setLoggedUser(updatedUser);
+    localStorage.setItem("loggedUser", JSON.stringify(updatedUser));
     setRegisteredUsers((cur) => {
-      const updatedUsers = cur.map((u) => {
-        if (u.email === updatedUser.email) {
+      const updatedUsers = cur.map((user) => {
+        if (user.email === updatedUser.email) {
           return updatedUser;
         }
-        return u;
+        return user;
       });
       localStorage.setItem("registeredUsers", JSON.stringify(updatedUsers));
       return updatedUsers;
     });
   }
-
-  const removeFavoriteProduct = (productSlug: string) => {
-    if (!loggedUser) return;
-    const updatedUser = { ...loggedUser };
-    updatedUser.favorites = updatedUser.favorites.filter((favorite) => favorite !== productSlug);
-    localStorage.setItem("loggedUser", JSON.stringify(updatedUser));
-    setLoggedUser(updatedUser);
-    setRegisteredUsers((cur) => {
-      const updatedUsers = cur.map((u) => {
-        if (u.email === updatedUser.email) {
-          return updatedUser;
-        }
-        return u;
-      });
-      localStorage.setItem("registeredUsers", JSON.stringify(updatedUsers));
-      return updatedUsers;
-    });
-  }
-
-  useEffect(() => {
-    if(localStorage.getItem("registeredUsers")) {
-      setRegisteredUsers(JSON.parse(localStorage.getItem("registeredUsers")!));
-    }
-
-    if (localStorage.getItem("loggedUser")) {
-      setLoggedUser(JSON.parse(localStorage.getItem("loggedUser")!));
-    }
-  }, []);
 
   return (
     <UserContext.Provider value={{
@@ -122,8 +114,8 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
       loggedUser,
       signInDialogState,
       handleSignInDialogState,
-      addFavoriteProduct,
-      removeFavoriteProduct,
+      handleFavoriteProduct,
+      favoriteProducts
     }}>
       {children}
     </UserContext.Provider>
